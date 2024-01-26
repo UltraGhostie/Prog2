@@ -2,26 +2,26 @@ defmodule Test do
   import Listmap
   import Treemap
   def test(i \\ 100, n \\ 100) do
-    seq = Enum.map(1..n, fn(_) -> :rand.uniform(1000) end)
+    seq = Enum.map(1..n, fn(_) -> :rand.uniform(n*i) end)
     treelist = Enum.reduce(seq, Treemap.new(), fn(e, treelist) -> Treemap.add(treelist, e, :foo) end)
     list = Enum.reduce(seq, Listmap.new(), fn(e, list) -> Listmap.add(list, e, :foo) end)
     map = Enum.reduce(seq, Map.new(), fn(e, map) -> Map.put(map, e, :foo) end)
-    seq = Enum.map(1..i, fn(_) -> :rand.uniform(1000) end)
+    seq = Enum.map(1..i, fn(_) -> :rand.uniform(n*i) end)
     IO.write("Testing add...\n")
     {tt, _} = :timer.tc(fn() -> Enum.each(seq, fn(e) -> Treemap.add(treelist, e, :foo) end) end)
     {tl, _} = :timer.tc(fn() -> Enum.each(seq, fn(e) -> Listmap.add(list, e, :foo) end) end)
     {tm, _} = :timer.tc(fn() -> Enum.each(seq, fn(e) -> Map.put(map, e, :foo) end) end)
-    IO.write("Tree: #{tl/i}, List:#{tt/i}, Map:#{tm/i}\n")
+    IO.write("Tree: #{tl}, List:#{tt}, Map:#{tm}\n")
     IO.write("Testing lookup...\n")
     {tt, _} = :timer.tc(fn() -> Enum.each(seq, fn(e) -> Treemap.lookup(treelist, e) end) end)
     {tl, _} = :timer.tc(fn() -> Enum.each(seq, fn(e) -> Listmap.lookup(list, e) end) end)
     {tm, _} = :timer.tc(fn() -> Enum.each(seq, fn(e) -> Map.get(map, e) end) end)
-    IO.write("Tree: #{tl/i}, List:#{tt/i}, Map:#{tm/i}\n")
+    IO.write("Tree: #{tl}, List:#{tt}, Map:#{tm}\n")
     IO.write("Testing remove...\n")
     {tt, _} = :timer.tc(fn() -> Enum.each(seq, fn(e) -> Treemap.remove(e, treelist) end) end)
     {tl, _} = :timer.tc(fn() -> Enum.each(seq, fn(e) -> Listmap.remove(e, list) end) end)
     {tm, _} = :timer.tc(fn() -> Enum.each(seq, fn(e) -> Map.delete(map, e) end) end)
-    IO.write("Tree: #{tl/i}, List:#{tt/i}, Map:#{tm/i}\n")
+    IO.write("Tree: #{tl}, List:#{tt}, Map:#{tm}\n")
   end
 
   def testTreeMap() do

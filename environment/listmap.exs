@@ -2,6 +2,7 @@ defmodule Listmap do
   def new() do [] end
 
   def add(l, k, v) do add(l, {k,v}) end
+  def add([{key,_}|t], {key,val}) do [{key,val}|t] end
   def add([], z) do z end
   def add([h|t], z) do add(t, [h|z]) end
   def add(h, z) do add([], [h|z]) end

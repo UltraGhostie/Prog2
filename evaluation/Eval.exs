@@ -27,7 +27,7 @@ defmodule Eval do
   def map(map, _) do map end
 
   def rationalize(n) do
-    {n1, n2} = ratio(n)
+    {n1, n2} = ratio((n+0.5)-0.5)
     cond do
       n2 == 1 ->
         {:num, n1}
@@ -36,13 +36,16 @@ defmodule Eval do
     end
   end
 
-  def test(x \\ 1) do
+  def test(x \\ 2, y \\ 5) do
     map = Map.new()
     map = map(map, {:x, x})
+    map = map(map, {:y, y})
 
-    e = {:add, {:add, {:mul, {:num, 2}, {:var, :x}}, {:num, 2}}, {:q, 1,2}}
-
+    # e = {:add, {:add, {:mul, {:num, 2}, {:var, :x}}, {:num, 2}}, {:q, 1,2}} # 2x+2+0.5
+    #e = {:mul, {:var, :x}, {:var, :y}} # xy
+    e = {:add, {:add, {:div, {:mul, {:var, :y}, {:num, 3}}, {:var, :x}}, {:num, 10}}, {:mul, {:var, :x}, {:var, :y}}}
+    # y3/x+10+xy
     n = rationalize(eval(e, map))
-    n
+
   end
 end

@@ -180,7 +180,7 @@ defmodule Eager do
     :error
   end
   def evaluate_clause [{:clause, pattern, sequence} | tail], strct, environment do
-    case evaluate_match(pattern, strct, Enum.reverse(evaluate_scope(pattern, environment))) do
+    case evaluate_match(pattern, strct, evaluate_scope(pattern, environment)) do
       {:ok, environment} ->
         evaluate_sequence(sequence, environment)
       :fail ->

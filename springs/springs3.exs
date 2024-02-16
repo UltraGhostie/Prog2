@@ -102,6 +102,47 @@ defmodule Springs3 do
       end
     end
 
+    def make_bin 0, bin do
+      bin
+    end
+    def make_bin integer, bin \\ 0 do
+      make_bin(integer-1, (bin<<<1)|||1)
+    end
+
+
+    def permutate [head|tail], memory, sequence, integer do
+      case <<head>> do
+        "." ->
+          case integer&&&0b1 do
+            0b1 ->
+              case pre_check(integer, sequence) do
+                -1 ->
+                  {[], memory}
+                _ ->
+                  permutate(tail, memory, sequence, integer<<<1)
+              end
+            0b0 ->
+              permutate(tail, memory, sequence, integer)
+          end
+        "#" ->
+          permutate(tail, memory, sequence, (integer<<<1)|||0b1)
+        "?" ->
+          case integer&&&0b1 do
+            0b1 ->
+              case pre_check(integer, sequence) do
+                -1 ->
+                  integer1 = []
+                _ ->
+                  {integer1, memory} = permutate(tail, memory, sequence, integer<<<1)
+              end
+            0b0 ->
+              {integer1, memory} = permutate(tail, memory, sequence, integer)
+          end
+          {integer2, memory} = permutate(tail, memory, sequence, (integer<<<1)|||0b1)
+          {integer1++integer2, memory}
+      end
+    end
+
     def permutate [], max_depth, max_length, memory, sequence, length, depth, integer do
       cond do
         length < max_length ->
@@ -122,7 +163,12 @@ defmodule Springs3 do
             "." ->
               case integer&&&0b1 do
                 0b1 ->
-                  permutate(tail, max_depth, max_length, memory, sequence, length, depth, (integer<<<1))
+                  case fit_so_far(integer, sequence) do
+                    -1 ->
+                      {[], memory}
+                    _ ->
+                      permutate(tail, max_depth, max_length, memory, sequence, length, depth, (integer<<<1))
+                  end
                 0b0 ->
                   permutate(tail, max_depth, max_length, memory, sequence, length, depth, integer)
               end
@@ -136,7 +182,13 @@ defmodule Springs3 do
             "?" ->
               case integer&&&0b1 do
                 0b1 ->
-                  {permutations, memory} = permutate(tail, max_depth, max_length, memory, sequence, length, depth, (integer<<<1))
+                  permutations = []
+                  case fit_so_far(integer, sequence) do
+                    -1 ->
+                      permutations = []
+                    _ ->
+                      {permutations, memory} = permutate(tail, max_depth, max_length, memory, sequence, length, depth, (integer<<<1))
+                  end
                   {permutations2, memory} = permutate(tail, max_depth, max_length, memory, sequence, length+1, depth, (integer<<<1)|||0b1)
                   {permutations++permutations2, memory}
                 0b0 ->
@@ -150,7 +202,12 @@ defmodule Springs3 do
             "." ->
               case integer&&&0b1 do
                 0b1 ->
-                  permutate(tail, max_depth, max_length, memory, sequence, length, depth, (integer<<<1))
+                  case fit_so_far(integer, sequence) do
+                    -1 ->
+                      {[], memory}
+                    _ ->
+                      permutate(tail, max_depth, max_length, memory, sequence, length, depth, (integer<<<1))
+                  end
                 0b0 ->
                   permutate(tail, max_depth, max_length, memory, sequence, length, depth, integer)
               end
@@ -164,7 +221,12 @@ defmodule Springs3 do
             "?" ->
               case integer&&&0b1 do
                 0b1 ->
-                  permutate(tail, max_depth, max_length, memory, sequence, length, depth, (integer<<<1))
+                  case fit_so_far(integer, sequence) do
+                    -1 ->
+                      {[], memory}
+                    _ ->
+                      permutate(tail, max_depth, max_length, memory, sequence, length, depth, (integer<<<1))
+                  end
                 0b0 ->
                   permutate(tail, max_depth, max_length, memory, sequence, length, depth, integer)
               end
@@ -174,6 +236,31 @@ defmodule Springs3 do
       end
     end
 
+    def fit_so_far integer, [] do
+      integer
+    end
+    def fit_so_far integer, [head|tail] do
+      shift(integer)
+      |> lazy_check(head)
+      |> fit_so_far(tail)
+    end
+
+    def lazy_check bits, 0 do
+      cond do
+        (bits&&&0b1) == 0b0 ->
+          bits
+        true ->
+          -1
+      end
+    end
+    def lazy_check bits, amount do
+      cond do
+        (bits&&&0b1) == 0b1 ->
+          check(bits>>>1, amount-1)
+        true ->
+          -1
+      end
+    end
 
     def spring_split spring do
       String.split(spring)

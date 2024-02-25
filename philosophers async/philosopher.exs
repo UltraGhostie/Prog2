@@ -1,15 +1,12 @@
 defmodule Philosopher do
-  def start hunger, right_chopstick, left_chopstick, name, controller do
-    spawn_link(fn -> philosopher(hunger, right_chopstick, left_chopstick, name, controller) end)
+  def start hunger, right_chopstick, left_chopstick, name, controller, strength do
+    spawn_link(fn -> philosopher(hunger, right_chopstick, left_chopstick, name, controller, strength) end)
   end
 
   defp dead do
     dead()
   end
 
-  def philosopher hunger, right_chopstick, left_chopstick, name, controller do
-    philosopher(hunger, right_chopstick, left_chopstick, name, controller, 4)
-  end
   def philosopher _, left_chopstick, right_chopstick, name, controller, 0 do
     IO.puts("#{name} dies")
     send(controller, :done)
@@ -23,19 +20,19 @@ defmodule Philosopher do
   end
   def philosopher hunger, right_chopstick, left_chopstick, name, controller, strength do
     IO.puts("#{name} thinks")
-    sleep(4000)
+    sleep(10)
     IO.puts("#{name} asked for chopsticks")
     me = self()
     request = spawn_link(fn -> Chopstick.request(left_chopstick, right_chopstick, name, me) end)
     receive do
       :ok ->
-        sleep(4000)
+        sleep(10)
         IO.puts("#{name} ate")
         Chopstick.return(right_chopstick)
         Chopstick.return(left_chopstick)
-        philosopher(hunger-1, right_chopstick, left_chopstick, name, controller)
+        philosopher(hunger-1, right_chopstick, left_chopstick, name, controller, strength)
       after
-      3_000 ->
+      10 ->
         send(request, :timeout)
         IO.puts("#{name} hungers")
         philosopher(hunger, right_chopstick, left_chopstick, name, controller, strength-1)

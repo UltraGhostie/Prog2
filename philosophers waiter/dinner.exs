@@ -1,15 +1,23 @@
 defmodule Dinner do
   def start(hunger \\ 5) do
-    ret = self()
-    time = 500000
-    spawn(fn -> init(hunger, ret) end)
-    timer = Process.send_after(ret, :time, time)
+    timer = spawn(fn -> timer() end)
+    spawn(fn -> init(hunger, timer) end)
+  end
+
+  def timer do
+    me = self()
+    time = 600*1000
+    timer = Process.send_after(me, :end, time)
     receive do
-      :stop ->
+      {:stop, id} ->
+        send(id, :ack)
         time = time - Process.cancel_timer(timer)
-        IO.inspect(time)
+        IO.puts(time)
+      :end ->
+        IO.puts("OOT")
+        IO.inspect(self())
     end
-end
+  end
 
   def init(hunger, timer) do
     c1 = Chopstick.start()
@@ -31,7 +39,13 @@ end
     Enum.each(chopsticks, fn(c) -> Chopstick.quit(c) end)
     IO.puts("Dinner ends")
     Waiter.quit(waiter)
-    send(timer, :stop)
+    me = self()
+    send(timer, {:stop, me})
+    receive do
+      :ack ->
+      after
+      2_000 ->
+    end
     Process.exit(self(), :kill)
   end
   def wait(n, chopsticks, waiter, timer) do

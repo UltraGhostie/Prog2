@@ -39,6 +39,6 @@ defmodule Chopstick do
   end
 
   def quit chopstick do
-    Process.exit(chopstick, :kill)
+    send(chopstick, :quit)
   end
 end

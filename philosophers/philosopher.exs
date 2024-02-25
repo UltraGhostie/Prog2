@@ -1,6 +1,6 @@
 defmodule Philosopher do
-  def start hunger, right_chopstick, left_chopstick, name, controller do
-    spawn_link(fn -> philosopher(hunger, right_chopstick, left_chopstick, name, controller) end)
+  def start hunger, right_chopstick, left_chopstick, name, controller, hunger do
+    spawn_link(fn -> philosopher(hunger, right_chopstick, left_chopstick, name, controller, hunger) end)
   end
 
   def dead do
@@ -21,17 +21,17 @@ defmodule Philosopher do
   end
   def philosopher hunger, right_chopstick, left_chopstick, name, controller, strength do
     IO.puts("#{name} thinks")
-    sleep(3000)
+    sleep(10)
     IO.puts("#{name} asked for right chopstick")
-    case Chopstick.request(right_chopstick, 1_000) do
+    case Chopstick.request(right_chopstick, 10) do
       :ok ->
         IO.puts("#{name} got right chopstick")
-        sleep(1500)
+        sleep(10)
         IO.puts("#{name} asked for left chopstick")
-        case Chopstick.request(left_chopstick, 1_000) do
+        case Chopstick.request(left_chopstick, 10) do
           :ok ->
             IO.puts("#{name} got left chopstick")
-            sleep(2000)
+            sleep(10)
             IO.puts("#{name} ate")
             Chopstick.return(right_chopstick)
             Chopstick.return(left_chopstick)

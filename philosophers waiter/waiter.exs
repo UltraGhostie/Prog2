@@ -5,7 +5,7 @@ defmodule Waiter do
 
   def quit pid do
     IO.puts("Waiter leaves")
-    Process.exit(pid, :kill)
+    send(pid, :quit)
   end
 
   defp init number do
@@ -14,17 +14,19 @@ defmodule Waiter do
 
   defp wait max, eating \\ [] do
     receive do
-      {:request, pid, number} ->
+      {:request, philosopher, number} ->
         case Enum.all?(eating, fn x -> !(abs(x-number) == 1 || abs(x-number) == max-1) end) do
           true ->
-            send(pid, :ack)
+            send(philosopher, :ack)
             wait(max, eating++[number])
           false ->
-            send(pid, :nay)
+            send(philosopher, :nay)
             wait(max, eating)
         end
       {:done, number} ->
         wait(max, eating--[number])
+      :quit ->
+        :ok
     end
   end
 end

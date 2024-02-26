@@ -17,9 +17,10 @@ defmodule Test do
     height = 2160
     depth = 64
     k = (xn - x0) / width
-    image = Mandel.mandelbrot(width, height, x0, y0, k, depth)
+    image = Mandelcool.mandelbrot(width, height, x0, y0, k, depth)
     # PPM.write("small.ppm", image)
     ppm_content = PPMGenerator.generate_ppm(image)
     File.write!("output.ppm", ppm_content)
+    IO.inspect(image)
   end
 end

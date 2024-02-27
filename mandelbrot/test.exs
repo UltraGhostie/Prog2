@@ -12,7 +12,7 @@ defmodule Test do
     demo(x0, y0, xn, d, res)
   end
 
-  def demo x0, y0, xn, d \\ 64, res \\ 1 do
+  def demo x0, y0, xn, d \\ 64, res \\ 0 do
     me = self()
     time = 20*60*1000
     timer = Process.send_after(me, :time, 20*60*1000)

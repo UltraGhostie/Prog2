@@ -8,7 +8,7 @@ defmodule Test do
     IO.inspect(string)
   end
 
-  def test x0, y0, xn, d \\ 64, res \\ 1 do
+  def test x0, y0, xn, d \\ 64, res \\ 0 do
     demo(x0, y0, xn, d, res)
   end
 

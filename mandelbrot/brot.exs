@@ -1,8 +1,6 @@
 defmodule Brot do
   def mandelbrot c, max do
-    z0 = Complex.new()
-    i = 0
-    test(z0, i, c, max)
+    test({0,0}, 0, c, max)
   end
 
   defp test z, max, c, max do 0 end

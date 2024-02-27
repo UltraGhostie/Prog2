@@ -4,7 +4,7 @@ defmodule Complex do
 
   def add {ra,ia}, {rb,ib} do {ra+rb,ia+ib} end
 
-  def square {r,i} do {(r*r)-(i*i), 2*r*i} end
+  def square {r,i} do {(r*r)-(i*i), (r*i)*2} end
 
   def abs {r,i} do :math.sqrt((r*r)+(i*i)) end
 end

@@ -38,8 +38,8 @@ defmodule Mandelcool do
       max = max+incr
       IO.inspect(min..max)
       t8 = Task.async(fn -> rows(width, min..max, max, trans, depth, []) end)
-      Task.await_many([t8, t7, t6, t5, t4, t3, t2, t1], 20*60*1000)
-      |> Enum.join(rows, " ")
+      Task.await_many([t8, t7, t6, t5, t4, t3, t2, t1], 40*60*1000)
+      |> Enum.join(" ")
   end
 
   def rows _, min.._, min, _, _, list do

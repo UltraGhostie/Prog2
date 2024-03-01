@@ -15,7 +15,7 @@ defmodule Test do
   def demo x0, y0, xn, d \\ 64, res \\ 0 do
     me = self()
     time = 20*60*1000
-    timer = Process.send_after(me, :time, 20*60*1000)
+    timer = Process.send_after(me, :time, 40*60*1000)
     small(x0, y0, xn, d, res)
     receive do
       :time ->

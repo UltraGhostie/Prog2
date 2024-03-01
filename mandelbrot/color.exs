@@ -4,20 +4,22 @@ defmodule Color do
   end
 
   defp example depth, max do
-    a = (depth/max)*2
+    a = (depth/max)*5
     x = trunc(a)
-    y = (a-x)*255 |> trunc()
+    y = (a-x)*65535 |> round()
     case x do
       0 ->
         "#{y} 0 0"
       1 ->
-        "255 #{y} 0"
+        "65535 #{y} 0"
       2 ->
-        "#{255-y} 255 0"
+        "#{65535-y} 65535 0"
       3 ->
-        "0 255 #{y}"
+        "0 65535 #{y}"
       4 ->
-        "0 #{255-y} 255"
+        "0 #{65535-y} 65535"
+      5 ->
+        "0 0 #{65535-y}"
     end
   end
 end

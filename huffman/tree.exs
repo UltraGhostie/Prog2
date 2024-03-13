@@ -6,13 +6,13 @@ defmodule Tree do
     |> huffman()
   end
 
-  def freq(sample) do
+  def freq sample do
     freq(sample, Map.new())
   end
-  def freq([], freq) do
+  def freq [], freq do
     freq
   end
-  def freq([char | rest], freq) do
+  def freq [char | rest], freq do
     case Map.fetch(freq, char) do
       {:ok, count} ->
         freq(rest, Map.put(freq, char, count+1))

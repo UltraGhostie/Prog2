@@ -13,6 +13,9 @@ defmodule Huffman2 do
   end
 
   def test do
+    me = self()
+    time = 20*60*1000
+    timer = Process.send_after(me, :time, time)
     text = read("text.txt")
     IO.puts("Sampling")
     tree = text |> tree()
@@ -26,5 +29,12 @@ defmodule Huffman2 do
     IO.puts("Writing")
     text = List.to_string(text)
     File.write("test.txt", text)
+    receive do
+      :time ->
+        IO.puts("time")
+      after
+        0 ->
+          IO.puts(time - Process.cancel_timer(timer))
+    end
   end
 end

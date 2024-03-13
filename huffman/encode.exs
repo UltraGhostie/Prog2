@@ -7,7 +7,6 @@ defmodule Encode do
     code
   end
   def encode [head|tail], table, code do
-    # IO.inspect(head)
     encode(tail, table, code++lookup(table, [head]))
   end
 
@@ -27,7 +26,7 @@ defmodule Encode do
     case Enum.drop_while(table, fn {key,_} -> key != item end) do
       [{_,value}|_] ->
         value
-      other ->
+      _ ->
         IO.inspect(item, label: "FTF")
         Process.exit(self(), :kill)
     end
